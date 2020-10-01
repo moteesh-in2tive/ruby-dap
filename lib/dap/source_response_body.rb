@@ -3,5 +3,5 @@ class DAP::SourceResponseBody < DAP::Base
   property :content
 
   # Optional content type (mime type) of the source.
-  property :mimeType
+  property :mimeType, required: false
 end

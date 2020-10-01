@@ -9,14 +9,14 @@ class DAP::GotoTarget < DAP::Base
   property :line
 
   # An optional column of the goto target.
-  property :column
+  property :column, required: false
 
   # An optional end line of the range covered by the goto target.
-  property :endLine
+  property :endLine, required: false
 
   # An optional end column of the range covered by the goto target.
-  property :endColumn
+  property :endColumn, required: false
 
   # Optional memory reference for the instruction pointer value represented by this target.
-  property :instructionPointerReference
+  property :instructionPointerReference, required: false
 end

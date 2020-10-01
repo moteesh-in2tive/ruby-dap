@@ -8,8 +8,8 @@ class DAP::SetExpressionArguments < DAP::Base
   property :value
 
   # Evaluate the expressions in the scope of this stack frame. If not specified, the expressions are evaluated in the global scope.
-  property :frameId
+  property :frameId, required: false
 
   # Specifies how the resulting value should be formatted.
-  property :format, as: DAP::ValueFormat
+  property :format, required: false, as: DAP::ValueFormat
 end

@@ -3,5 +3,5 @@ class DAP::ProgressEndEventBody < DAP::Base
   property :progressId
 
   # Optional, more detailed progress message. If omitted, the previous message (if any) is used.
-  property :message
+  property :message, required: false
 end

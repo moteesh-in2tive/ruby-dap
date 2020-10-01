@@ -5,5 +5,5 @@ class DAP::ModulesResponseBody < DAP::Base
   property :modules, as: many(DAP::Module)
 
   # The total number of modules available.
-  property :totalModules
+  property :totalModules, required: false
 end

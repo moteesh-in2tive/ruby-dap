@@ -5,8 +5,8 @@ class DAP::StepInArguments < DAP::Base
   property :threadId
 
   # Optional id of the target to step into.
-  property :targetId
+  property :targetId, required: false
 
   # Optional granularity to step. If no granularity is specified, a granularity of 'statement' is assumed.
-  property :granularity, as: DAP::SteppingGranularity
+  property :granularity, required: false, as: DAP::SteppingGranularity
 end

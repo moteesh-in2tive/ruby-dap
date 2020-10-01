@@ -121,6 +121,7 @@ def convert(js)
 
     comment.scan(/   \* (.*)\n/).map { |c| file.puts "  # #{c[0]}" }
     file.write "  property :#{name}"
+    file.write ", required: false" if optional == '?'
     unless /^[a-z]/ =~ type
       if (m = type.match(/^(\w+)$/)) && m[1] != 'InvalidatedAreas'
         file.write ", as: DAP::#{type}"

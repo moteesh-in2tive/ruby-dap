@@ -10,34 +10,34 @@ class DAP::Scope < DAP::Base
   # 'locals': Scope contains local variables.
   # 'registers': Scope contains registers. Only a single 'registers' scope should be returned from a 'scopes' request.
   # etc.
-  property :presentationHint # 'arguments' | 'locals' | 'registers' | string
+  property :presentationHint, required: false # 'arguments' | 'locals' | 'registers' | string
 
   # The variables of this scope can be retrieved by passing the value of variablesReference to the VariablesRequest.
   property :variablesReference
 
   # The number of named variables in this scope.
   # The client can use this optional information to present the variables in a paged UI and fetch them in chunks.
-  property :namedVariables
+  property :namedVariables, required: false
 
   # The number of indexed variables in this scope.
   # The client can use this optional information to present the variables in a paged UI and fetch them in chunks.
-  property :indexedVariables
+  property :indexedVariables, required: false
 
   # If true, the number of variables in this scope is large or expensive to retrieve.
   property :expensive
 
   # Optional source for this scope.
-  property :source, as: DAP::Source
+  property :source, required: false, as: DAP::Source
 
   # Optional start line of the range covered by this scope.
-  property :line
+  property :line, required: false
 
   # Optional start column of the range covered by this scope.
-  property :column
+  property :column, required: false
 
   # Optional end line of the range covered by this scope.
-  property :endLine
+  property :endLine, required: false
 
   # Optional end column of the range covered by this scope.
-  property :endColumn
+  property :endColumn, required: false
 end

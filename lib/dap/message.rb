@@ -7,17 +7,17 @@ class DAP::Message < DAP::Base
   property :format
 
   # An object used as a dictionary for looking up the variables in the format string.
-  property :variables # { [key: string]: string; }
+  property :variables, required: false # { [key: string]: string; }
 
   # If true send to telemetry.
-  property :sendTelemetry
+  property :sendTelemetry, required: false
 
   # If true show user.
-  property :showUser
+  property :showUser, required: false
 
   # An optional url where additional information about this message can be found.
-  property :url
+  property :url, required: false
 
   # An optional label that is presented to the user as the UI for opening the url.
-  property :urlLabel
+  property :urlLabel, required: false
 end

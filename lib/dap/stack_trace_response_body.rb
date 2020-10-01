@@ -6,5 +6,5 @@ class DAP::StackTraceResponseBody < DAP::Base
   property :stackFrames, as: many(DAP::StackFrame)
 
   # The total number of frames available.
-  property :totalFrames
+  property :totalFrames, required: false
 end

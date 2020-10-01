@@ -6,11 +6,11 @@ class DAP::ExceptionInfoResponseBody < DAP::Base
   property :exceptionId
 
   # Descriptive text for the exception provided by the debug adapter.
-  property :description
+  property :description, required: false
 
   # Mode that caused the exception notification to be raised.
   property :breakMode, as: DAP::ExceptionBreakMode
 
   # Detailed information about the exception.
-  property :details, as: DAP::ExceptionDetails
+  property :details, required: false, as: DAP::ExceptionDetails
 end

@@ -8,11 +8,11 @@ class DAP::BreakpointLocationsArguments < DAP::Base
   property :line
 
   # Optional start column of range to search possible breakpoint locations in. If no start column is given, the first column in the start line is assumed.
-  property :column
+  property :column, required: false
 
   # Optional end line of range to search possible breakpoint locations in. If no end line is given, then the end line is assumed to be the start line.
-  property :endLine
+  property :endLine, required: false
 
   # Optional end column of range to search possible breakpoint locations in. If no end column is given, then it is assumed to be in the last column of the end line.
-  property :endColumn
+  property :endColumn, required: false
 end

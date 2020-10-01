@@ -6,23 +6,23 @@ class DAP::Module < DAP::Base
   property :name
 
   # True if the module is optimized.
-  property :isOptimized
+  property :isOptimized, required: false
 
   # True if the module is considered 'user code' by a debugger that supports 'Just My Code'.
-  property :isUserCode
+  property :isUserCode, required: false
 
   # Version of Module.
-  property :version
+  property :version, required: false
 
   # User understandable description of if symbols were found for the module (ex: 'Symbols Loaded', 'Symbols not found', etc.
-  property :symbolStatus
+  property :symbolStatus, required: false
 
   # Logical full path to the symbol file. The exact definition is implementation defined.
-  property :symbolFilePath
+  property :symbolFilePath, required: false
 
   # Module created or modified.
-  property :dateTimeStamp
+  property :dateTimeStamp, required: false
 
   # Address range covered by this module.
-  property :addressRange
+  property :addressRange, required: false
 end

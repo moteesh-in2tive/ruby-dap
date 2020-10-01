@@ -3,11 +3,11 @@ class DAP::BreakpointLocation < DAP::Base
   property :line
 
   # Optional start column of breakpoint location.
-  property :column
+  property :column, required: false
 
   # Optional end line of breakpoint location if the location covers a range.
-  property :endLine
+  property :endLine, required: false
 
   # Optional end column of breakpoint location if the location covers a range.
-  property :endColumn
+  property :endColumn, required: false
 end

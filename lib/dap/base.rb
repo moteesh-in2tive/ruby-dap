@@ -25,7 +25,7 @@ class DAP::Base
     Class.new(DAP::Base)
   end
 
-  def self.property(*names, as: nil)
+  def self.property(*names, as: nil, required: true)
     @properties ||= []
     @transformations ||= {}
 

@@ -6,5 +6,5 @@ class DAP::ExceptionBreakpointsFilter < DAP::Base
   property :label
 
   # Initial value of the filter. If not specified a value 'false' is assumed.
-  property :default
+  property :default, required: false
 end

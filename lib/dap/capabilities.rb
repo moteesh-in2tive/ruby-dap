@@ -4,107 +4,107 @@ require_relative 'checksum_algorithm'
 
 class DAP::Capabilities < DAP::Base
   # The debug adapter supports the 'configurationDone' request.
-  property :supportsConfigurationDoneRequest
+  property :supportsConfigurationDoneRequest, required: false
 
   # The debug adapter supports function breakpoints.
-  property :supportsFunctionBreakpoints
+  property :supportsFunctionBreakpoints, required: false
 
   # The debug adapter supports conditional breakpoints.
-  property :supportsConditionalBreakpoints
+  property :supportsConditionalBreakpoints, required: false
 
   # The debug adapter supports breakpoints that break execution after a specified number of hits.
-  property :supportsHitConditionalBreakpoints
+  property :supportsHitConditionalBreakpoints, required: false
 
   # The debug adapter supports a (side effect free) evaluate request for data hovers.
-  property :supportsEvaluateForHovers
+  property :supportsEvaluateForHovers, required: false
 
   # Available filters or options for the setExceptionBreakpoints request.
-  property :exceptionBreakpointFilters, as: many(DAP::ExceptionBreakpointsFilter)
+  property :exceptionBreakpointFilters, required: false, as: many(DAP::ExceptionBreakpointsFilter)
 
   # The debug adapter supports stepping back via the 'stepBack' and 'reverseContinue' requests.
-  property :supportsStepBack
+  property :supportsStepBack, required: false
 
   # The debug adapter supports setting a variable to a value.
-  property :supportsSetVariable
+  property :supportsSetVariable, required: false
 
   # The debug adapter supports restarting a frame.
-  property :supportsRestartFrame
+  property :supportsRestartFrame, required: false
 
   # The debug adapter supports the 'gotoTargets' request.
-  property :supportsGotoTargetsRequest
+  property :supportsGotoTargetsRequest, required: false
 
   # The debug adapter supports the 'stepInTargets' request.
-  property :supportsStepInTargetsRequest
+  property :supportsStepInTargetsRequest, required: false
 
   # The debug adapter supports the 'completions' request.
-  property :supportsCompletionsRequest
+  property :supportsCompletionsRequest, required: false
 
   # The set of characters that should trigger completion in a REPL. If not specified, the UI should assume the '.' character.
-  property :completionTriggerCharacters
+  property :completionTriggerCharacters, required: false
 
   # The debug adapter supports the 'modules' request.
-  property :supportsModulesRequest
+  property :supportsModulesRequest, required: false
 
   # The set of additional module information exposed by the debug adapter.
-  property :additionalModuleColumns, as: many(DAP::ColumnDescriptor)
+  property :additionalModuleColumns, required: false, as: many(DAP::ColumnDescriptor)
 
   # Checksum algorithms supported by the debug adapter.
-  property :supportedChecksumAlgorithms, as: many(DAP::ChecksumAlgorithm)
+  property :supportedChecksumAlgorithms, required: false, as: many(DAP::ChecksumAlgorithm)
 
   # The debug adapter supports the 'restart' request. In this case a client should not implement 'restart' by terminating and relaunching the adapter but by calling the RestartRequest.
-  property :supportsRestartRequest
+  property :supportsRestartRequest, required: false
 
   # The debug adapter supports 'exceptionOptions' on the setExceptionBreakpoints request.
-  property :supportsExceptionOptions
+  property :supportsExceptionOptions, required: false
 
   # The debug adapter supports a 'format' attribute on the stackTraceRequest, variablesRequest, and evaluateRequest.
-  property :supportsValueFormattingOptions
+  property :supportsValueFormattingOptions, required: false
 
   # The debug adapter supports the 'exceptionInfo' request.
-  property :supportsExceptionInfoRequest
+  property :supportsExceptionInfoRequest, required: false
 
   # The debug adapter supports the 'terminateDebuggee' attribute on the 'disconnect' request.
-  property :supportTerminateDebuggee
+  property :supportTerminateDebuggee, required: false
 
   # The debug adapter supports the delayed loading of parts of the stack, which requires that both the 'startFrame' and 'levels' arguments and the 'totalFrames' result of the 'StackTrace' request are supported.
-  property :supportsDelayedStackTraceLoading
+  property :supportsDelayedStackTraceLoading, required: false
 
   # The debug adapter supports the 'loadedSources' request.
-  property :supportsLoadedSourcesRequest
+  property :supportsLoadedSourcesRequest, required: false
 
   # The debug adapter supports logpoints by interpreting the 'logMessage' attribute of the SourceBreakpoint.
-  property :supportsLogPoints
+  property :supportsLogPoints, required: false
 
   # The debug adapter supports the 'terminateThreads' request.
-  property :supportsTerminateThreadsRequest
+  property :supportsTerminateThreadsRequest, required: false
 
   # The debug adapter supports the 'setExpression' request.
-  property :supportsSetExpression
+  property :supportsSetExpression, required: false
 
   # The debug adapter supports the 'terminate' request.
-  property :supportsTerminateRequest
+  property :supportsTerminateRequest, required: false
 
   # The debug adapter supports data breakpoints.
-  property :supportsDataBreakpoints
+  property :supportsDataBreakpoints, required: false
 
   # The debug adapter supports the 'readMemory' request.
-  property :supportsReadMemoryRequest
+  property :supportsReadMemoryRequest, required: false
 
   # The debug adapter supports the 'disassemble' request.
-  property :supportsDisassembleRequest
+  property :supportsDisassembleRequest, required: false
 
   # The debug adapter supports the 'cancel' request.
-  property :supportsCancelRequest
+  property :supportsCancelRequest, required: false
 
   # The debug adapter supports the 'breakpointLocations' request.
-  property :supportsBreakpointLocationsRequest
+  property :supportsBreakpointLocationsRequest, required: false
 
   # The debug adapter supports the 'clipboard' context value in the 'evaluate' request.
-  property :supportsClipboardContext
+  property :supportsClipboardContext, required: false
 
   # The debug adapter supports stepping granularities (argument 'granularity') for the stepping requests.
-  property :supportsSteppingGranularity
+  property :supportsSteppingGranularity, required: false
 
   # The debug adapter supports adding breakpoints based on instruction references.
-  property :supportsInstructionBreakpoints
+  property :supportsInstructionBreakpoints, required: false
 end

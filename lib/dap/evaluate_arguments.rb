@@ -5,7 +5,7 @@ class DAP::EvaluateArguments < DAP::Base
   property :expression
 
   # Evaluate the expression in the scope of this stack frame. If not specified, the expression is evaluated in the global scope.
-  property :frameId
+  property :frameId, required: false
 
   # The context in which the evaluate request is run.
   # Values:
@@ -15,9 +15,9 @@ class DAP::EvaluateArguments < DAP::Base
   # 'clipboard': evaluate is run to generate the value that will be stored in the clipboard.
   # The attribute is only honored by a debug adapter if the capability 'supportsClipboardContext' is true.
   # etc.
-  property :context # 'watch' | 'repl' | 'hover' | 'clipboard' | string
+  property :context, required: false # 'watch' | 'repl' | 'hover' | 'clipboard' | string
 
   # Specifies details on how to format the Evaluate result.
   # The attribute is only honored by a debug adapter if the capability 'supportsValueFormattingOptions' is true.
-  property :format, as: DAP::ValueFormat
+  property :format, required: false, as: DAP::ValueFormat
 end

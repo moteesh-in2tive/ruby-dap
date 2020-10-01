@@ -1,10 +1,10 @@
 class DAP::RunInTerminalRequestArguments < DAP::Base
   # What kind of terminal to launch.
   # Values: 'integrated', 'external', etc.
-  property :kind # 'integrated' | 'external'
+  property :kind, required: false # 'integrated' | 'external'
 
   # Optional title of the terminal.
-  property :title
+  property :title, required: false
 
   # Working directory of the command.
   property :cwd
@@ -13,5 +13,5 @@ class DAP::RunInTerminalRequestArguments < DAP::Base
   property :args
 
   # Environment key-value pairs that are added to or removed from the default environment.
-  property :env # { [key: string]: string | null; }
+  property :env, required: false # { [key: string]: string | null; }
 end

@@ -6,12 +6,12 @@ class DAP::ColumnDescriptor < DAP::Base
   property :label
 
   # Format to use for the rendered values in this column. TBD how the format strings looks like.
-  property :format
+  property :format, required: false
 
   # Datatype of values in this column.  Defaults to 'string' if not specified.
   # Values: 'string', 'number', 'boolean', 'unixTimestampUTC', etc.
-  property :type # 'string' | 'number' | 'boolean' | 'unixTimestampUTC'
+  property :type, required: false # 'string' | 'number' | 'boolean' | 'unixTimestampUTC'
 
   # Width of this column in characters (hint only).
-  property :width
+  property :width, required: false
 end

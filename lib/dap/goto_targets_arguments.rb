@@ -8,5 +8,5 @@ class DAP::GotoTargetsArguments < DAP::Base
   property :line
 
   # An optional column location for which the goto targets are determined.
-  property :column
+  property :column, required: false
 end

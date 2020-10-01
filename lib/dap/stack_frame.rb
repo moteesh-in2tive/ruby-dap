@@ -9,7 +9,7 @@ class DAP::StackFrame < DAP::Base
   property :name
 
   # The optional source of the frame.
-  property :source, as: DAP::Source
+  property :source, required: false, as: DAP::Source
 
   # The line within the file of the frame. If source is null or doesn't exist, line is 0 and must be ignored.
   property :line
@@ -18,19 +18,19 @@ class DAP::StackFrame < DAP::Base
   property :column
 
   # An optional end line of the range covered by the stack frame.
-  property :endLine
+  property :endLine, required: false
 
   # An optional end column of the range covered by the stack frame.
-  property :endColumn
+  property :endColumn, required: false
 
   # Optional memory reference for the current instruction pointer in this frame.
-  property :instructionPointerReference
+  property :instructionPointerReference, required: false
 
   # The module associated with this frame, if any.
-  property :moduleId
+  property :moduleId, required: false
 
   # An optional hint for how to present this frame in the UI.
   # A value of 'label' can be used to indicate that the frame is an artificial frame that is used as a visual label or separator. A value of 'subtle' can be used to change the appearance of a frame in a 'subtle' way.
   # Values: 'normal', 'label', 'subtle', etc.
-  property :presentationHint # 'normal' | 'label' | 'subtle'
+  property :presentationHint, required: false # 'normal' | 'label' | 'subtle'
 end

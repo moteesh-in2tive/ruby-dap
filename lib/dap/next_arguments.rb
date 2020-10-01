@@ -5,5 +5,5 @@ class DAP::NextArguments < DAP::Base
   property :threadId
 
   # Optional granularity to step. If no granularity is specified, a granularity of 'statement' is assumed.
-  property :granularity, as: DAP::SteppingGranularity
+  property :granularity, required: false, as: DAP::SteppingGranularity
 end

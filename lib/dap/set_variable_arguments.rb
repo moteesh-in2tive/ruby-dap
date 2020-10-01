@@ -11,5 +11,5 @@ class DAP::SetVariableArguments < DAP::Base
   property :value
 
   # Specifies details on how to format the response value.
-  property :format, as: DAP::ValueFormat
+  property :format, required: false, as: DAP::ValueFormat
 end

@@ -5,12 +5,12 @@ class DAP::DataBreakpoint < DAP::Base
   property :dataId
 
   # The access type of the data.
-  property :accessType, as: DAP::DataBreakpointAccessType
+  property :accessType, required: false, as: DAP::DataBreakpointAccessType
 
   # An optional expression for conditional breakpoints.
-  property :condition
+  property :condition, required: false
 
   # An optional expression that controls how many hits of the breakpoint are ignored.
   # The backend is expected to interpret the expression as needed.
-  property :hitCondition
+  property :hitCondition, required: false
 end

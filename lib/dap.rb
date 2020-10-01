@@ -1,6 +1,5 @@
 require 'json'
+
 require_relative 'dap/encoding'
+require_relative 'dap/base'
 require_relative 'dap/protocol_message'
-require_relative 'dap/request'
-require_relative 'dap/event'
-require_relative 'dap/response'

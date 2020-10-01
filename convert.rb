@@ -1,18 +1,36 @@
 # Usage:
 # cat interface.js | ruby convert.rb > lib/dap/interface.rb
 
+PRINT_SKIP = false
+PRINT_NO_CONTENT = false
+PRINT_EXTENDS = false
+PRINT_REQUIRED = false
+
+def main
+  # convert($stdin.read)
+
+  IO.read('dap-spec.ts').split("\n\n// ---\n\n").each { |s| convert(s) }
+end
+
 def iface2file(iface)
   iface.gsub(/(^|[a-z])([A-Z])/) { |m| m.size == 1 ? m.downcase : m[0] + '_' + m[1].downcase }
 end
 
 def convert(js)
-  if m = js.match(/interface (\w+)[\s\w]+{\n  body: {\n(.*)\n  };\n}/m)
-    iface = m[1] + 'Body'
-    body = m[2].split("\n").map { |l| l[2..] }.join("\n")
+  if m = js.match(/interface (?<interface>\w+)(?: extends (?<extends>\w+))? {\n  body\??: {\n(?<body>.*)\n  };\n}/m)
+    iface = m[:interface] + 'Body'
+    extends = 'Base'
+    body = m[:body].split("\n").map { |l| l[2..] }.join("\n")
 
-  elsif m = js.match(/interface (\w+)[\s\w]+{\n(.*)\n?}/m)
-    iface = m[1]
-    body = m[2]
+  elsif m = js.match(/interface (?<interface>\w+)(?: extends (?<extends>\w+))? {\n(?<body>.*)\n?}/m)
+    iface = m[:interface]
+    extends = m[:extends] || 'Base'
+    body = m[:body]
+
+    if /.+(Event|Request|Response)$/ =~ iface
+      puts "Skipping #{iface}" if PRINT_SKIP
+      return
+    end
 
   elsif m = js.match(/type (\w+) = ((?:'\w+' \| )*'\w+');/)
     iface = m[1]
@@ -33,14 +51,37 @@ def convert(js)
   vars = body.scan(/  \/\*\*\n((?:   \* .*\n)*)   \*\/\n. (\w+)(\??): (.*);/)
 
   unless vars && vars.size > 0
-    puts "No content for #{iface}"
+    puts "No content for #{iface}" if PRINT_NO_CONTENT
     return
   end
 
+
+  required = []
+  required << iface2file(extends) if extends != 'Base'
+
+  vars.each do |comment, name, optional, type|
+    next if /^[a-z]/ =~ type
+    next unless m = type.match(/^(\w+)(\[\])?$/)
+
+    required << iface2file(m[1])
+  end
+
+  puts "#{iface} extends #{extends}" if extends != 'Base' && PRINT_EXTENDS
+  puts "#{iface} needs #{required.join(', ')}" unless required.empty? || !PRINT_REQUIRED
+
+  return if /^(ProtocolMessage|Request|Event|Response)$/ =~ iface
+
   file = File.open("lib/dap/#{iface2file(iface)}.rb", 'w')
+
+  unless required.empty?
+    required.each { |r| file.puts "require_relative '#{r}'" }
+    file.puts
+  end
+
+  file.puts "class DAP::#{iface} < DAP::#{extends}"
+
   first = true
-  file.puts "class DAP::#{iface} < DAP::Base"
-  vars.map do |comment, name, optional, type|
+  vars.each do |comment, name, optional, type|
     if first
       first = false
     else
@@ -51,9 +92,9 @@ def convert(js)
     file.write "  property :#{name}"
     unless /^[a-z]/ =~ type
       if m = type.match(/^\w+$/)
-        file.write ", as: #{type}"
+        file.write ", as: DAP::#{type}"
       elsif m = type.match(/^\w+\[\]$/)
-        file.write ", as_array: #{type[0...-2]}"
+        file.write ", as: many(DAP::#{type[0...-2]})"
       else
         file.write " # #{type}"
       end
@@ -63,6 +104,4 @@ def convert(js)
   file.puts "end"
 end
 
-# convert($stdin.read)
-
-IO.read('test').split("\n\n---\n\n").each { |s| convert(s) }
+main

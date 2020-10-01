@@ -8,51 +8,65 @@ class DAP::Base
       klazz = yield(values)
     end
 
-    raise "Unknown #{name} type '#{selector}'" unless klazz
     return values if values.is_a? klazz
 
     klazz.new(values)
   end
 
-  def self.property(*names)
+  def self.many(klazz)
+    DAP::Relation::Many.new(klazz)
+  end
+
+  def self.one_of(choices)
+    DAP::Relation::OneOf.new(choices)
+  end
+
+  def self.property(*names, as: nil)
     @properties ||= []
+    @transformations ||= {}
+
+    klazz = name
+
+    if as.is_a? Class
+      names.each do |name|
+        @transformations[name] = ->(value, values) { from(value || {}) { as } }
+      end
+
+    elsif as.is_a? DAP::Relation::Many
+      names.each do |name|
+        @transformations[name] = ->(value, values) { (value || []).map { |v| from(v) { as.klazz } } }
+      end
+
+    elsif as.is_a? DAP::Relation::OneOf
+      names.each do |name|
+        @transformations[name] = ->(value, values) do
+          from(value || {}) do
+            key = values[as.with]&.to_sym
+            raise "#{klazz}.#{as.with} missing" if key.nil?
+            raise "Unknown #{klazz}.#{as.with}: '#{key}'" unless as.types.key?(key)
+
+            as.types[key]
+          end
+        end
+      end
+    end
 
     @properties.push(*names)
     attr_reader(*names)
   end
 
-  def self.transform(name, to:, with: nil)
-    @transformations ||= {}
-
-    if with.nil?
-      @transformations[name] = ->(value, values) { from(value || {}) { to } }
-    else
-      @transformations[name] = ->(value, values) { from(value || {}) { to[values[with].to_sym] } }
-    end
-  end
-
-  def self.transform_array(name, to:, with: nil)
-    @transformations ||= {}
-
-    if with.nil?
-      @transformations[name] = ->(value, values) { (value || []).map { |v| from(v) { to } } }
-    else
-      @transformations[name] = ->(value, values) { (value || []).map { |v| from(v) { to[values[with].to_sym] } } }
-    end
-  end
-
   def self.properties
     @properties ||= []
-    return @properties if self == Base
+    return @properties if self == DAP::Base
 
     superclass.properties + @properties
   end
 
-  def self.transformations(name)
+  def self.transform(name)
     @transformations ||= {}
-    return @transformations[name] if self == Base
+    return @transformations[name] if self == DAP::Base
 
-    @transformations[name] || superclass.transformations(name)
+    @transformations[name] || superclass.transform(name)
   end
 
   def initialize(values)
@@ -61,7 +75,7 @@ class DAP::Base
     self.class.properties.each do |k|
       v = values[k]
 
-      transform = self.class.transformations(k)
+      transform = self.class.transform(k)
       v = transform.call(v, values) if transform
 
       self[k] = v

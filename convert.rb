@@ -17,8 +17,13 @@ def iface2file(iface)
 end
 
 def convert(js)
-  if m = js.match(/interface (?<interface>\w+)(?: extends (?<extends>\w+))? {\n  body\??: {\n(?<body>.*)\n  };\n}/m)
-    iface = m[:interface] + 'Body'
+  if m = js.match(/interface (?<interface>\w+)Event extends Event {\n  event: '\w+';\n\n  body\??: {\n(?<body>.*)\n  };\n}/m)
+    iface = m[:interface] + 'EventBody'
+    extends = 'Base'
+    body = m[:body].split("\n").map { |l| l[2..] }.join("\n")
+
+  elsif m = js.match(/interface (?<interface>\w+)Response extends Response {\n  body\??: {\n(?<body>.*)\n  };\n}/m)
+    iface = m[:interface] + 'ResponseBody'
     extends = 'Base'
     body = m[:body].split("\n").map { |l| l[2..] }.join("\n")
 
@@ -62,6 +67,7 @@ def convert(js)
   vars.each do |comment, name, optional, type|
     next if /^[a-z]/ =~ type
     next unless m = type.match(/^(\w+)(\[\])?$/)
+    next if m[1] == 'InvalidatedAreas'
 
     required << iface2file(m[1])
   end
@@ -91,9 +97,9 @@ def convert(js)
     comment.scan(/   \* (.*)\n/).map { |c| file.puts "  # #{c[0]}" }
     file.write "  property :#{name}"
     unless /^[a-z]/ =~ type
-      if m = type.match(/^\w+$/)
+      if (m = type.match(/^(\w+)$/)) && m[1] != 'InvalidatedAreas'
         file.write ", as: DAP::#{type}"
-      elsif m = type.match(/^\w+\[\]$/)
+      elsif (m = type.match(/^(\w+)\[\]$/)) && m[1] != 'InvalidatedAreas'
         file.write ", as: many(DAP::#{type[0...-2]})"
       else
         file.write " # #{type}"

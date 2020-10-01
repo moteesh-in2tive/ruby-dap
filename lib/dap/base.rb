@@ -1,5 +1,5 @@
 class DAP::Base
-  def self.from(values, &block)
+  def self.build(values, &block)
     values.transform_keys! &:to_sym if values.is_a? Hash
 
     if block.arity == 0
@@ -21,34 +21,45 @@ class DAP::Base
     DAP::Relation::OneOf.new(choices)
   end
 
+  def self.empty
+    Class.new(DAP::Base)
+  end
+
   def self.property(*names, as: nil)
     @properties ||= []
     @transformations ||= {}
 
     klazz = name
 
-    if as.is_a? Class
+    if as.is_a?(Class)
+      DAP::Relation.supported!(as)
+
       names.each do |name|
-        @transformations[name] = ->(value, values) { from(value || {}) { as } }
+        @transformations[name] = ->(value, values, invert: false) { invert ? value.to_h : build(value || {}) { as } }
       end
 
     elsif as.is_a? DAP::Relation::Many
       names.each do |name|
-        @transformations[name] = ->(value, values) { (value || []).map { |v| from(v) { as.klazz } } }
+        @transformations[name] = ->(value, values, invert: false) { invert ? (value || []).map(&:to_h) : (value || []).map { |v| build(v) { as.klazz } } }
       end
 
     elsif as.is_a? DAP::Relation::OneOf
       names.each do |name|
-        @transformations[name] = ->(value, values) do
-          from(value || {}) do
-            key = values[as.with]&.to_sym
-            raise "#{klazz}.#{as.with} missing" if key.nil?
-            raise "Unknown #{klazz}.#{as.with}: '#{key}'" unless as.types.key?(key)
+        @transformations[name] = ->(value, values, invert: false) do
+          return value.to_h if invert
+
+          build(value || {}) do
+            key = values[as.key]&.to_sym
+            raise "#{klazz}.#{as.key} missing" if key.nil?
+            raise "Unknown #{klazz}.#{as.key}: '#{key}'" unless as.types.key?(key)
 
             as.types[key]
           end
         end
       end
+
+    elsif !as.nil?
+      raise "Invalid property constraint: #{as.class} #{as.inspect}"
     end
 
     @properties.push(*names)
@@ -84,7 +95,11 @@ class DAP::Base
 
   def to_h
     self.class.properties.each_with_object({}) do |k, h|
-      h[k] = self[k]
+      if transform = self.class.transform(k)
+        h[k] = transform.call(self[k], self, invert: true)
+      else
+        h[k] = self[k]
+      end
     end
   end
 

@@ -8,7 +8,7 @@ class DAP::ProtocolMessage < DAP::Base
   end
 
   def self.from(values)
-    super(values) do |v|
+    build(values) do |v|
       key = v[:type]&.to_sym
       raise "#{name}.type missing" if key.nil?
       raise "Unknown #{name}.type #{key}" unless types.key?(key)

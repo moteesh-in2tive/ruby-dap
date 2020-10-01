@@ -1,10 +1,15 @@
 # Usage:
 # cat interface.js | ruby convert.rb > lib/dap/interface.rb
 
-PRINT_SKIP = false
-PRINT_NO_CONTENT = false
-PRINT_EXTENDS = false
-PRINT_REQUIRED = false
+PRETEND = true
+
+# PRINT_SKIP = true
+# PRINT_NO_CONTENT = true
+# PRINT_EXTENDS = true
+# PRINT_REQUIRED = true
+# REQUESTS_ONLY = true
+# EVENTS_ONLY = true
+# RESPONSES_ONLY = true
 
 def main
   # convert($stdin.read)
@@ -17,6 +22,27 @@ def iface2file(iface)
 end
 
 def convert(js)
+  if defined?(REQUESTS_ONLY)
+    if m = js.match(/interface \w+Request extends Request {\n  command: '(?<command>\w+)';(?:\n\n  arguments\??: (?<arguments>\w+);|.*)\n}/m)
+      puts "Request #{m[:command]} => #{m[:arguments] || 'none'}"
+    end
+    return
+  end
+
+  if defined?(EVENTS_ONLY)
+    if m = js.match(/interface (?<interface>\w+)Event extends Event {\n  event: '(?<event>\w+)';(?:\n\n  body\??: {\n(?<body>.*)\n  };\n|.*)}/m)
+      puts "Event #{m[:event]} => #{m[:body] ? m[:interface] + 'EventBody' : 'none'}"
+    end
+    return
+  end
+
+  if defined?(RESPONSES_ONLY)
+    if m = js.match(/interface (?<interface>\w+)Response extends Response {(\n  body\??: {\n(?<body>.*)\n  };|.*)\n}/m)
+      puts "Response #{m[:interface][0].downcase}#{m[:interface][1..]} => #{m[:body] ? m[:interface] + 'ResponseBody' : 'none'}"
+    end
+    return
+  end
+
   if m = js.match(/interface (?<interface>\w+)Event extends Event {\n  event: '\w+';\n\n  body\??: {\n(?<body>.*)\n  };\n}/m)
     iface = m[:interface] + 'EventBody'
     extends = 'Base'
@@ -33,7 +59,7 @@ def convert(js)
     body = m[:body]
 
     if /.+(Event|Request|Response)$/ =~ iface
-      puts "Skipping #{iface}" if PRINT_SKIP
+      puts "Skipping #{iface}" if defined?(PRINT_SKIP)
       return
     end
 
@@ -41,7 +67,7 @@ def convert(js)
     iface = m[1]
     enums = m[2].split(' | ')
 
-    file = File.open("lib/dap/#{iface2file(iface)}.rb", 'w')
+    file = open_iface_file(iface)
     first = true
     file.puts "class DAP::#{iface} < DAP::Enum"
     enums.each { |e| file.puts "  #{e[1...-1].upcase} = new(#{e})" }
@@ -56,10 +82,9 @@ def convert(js)
   vars = body.scan(/  \/\*\*\n((?:   \* .*\n)*)   \*\/\n. (\w+)(\??): (.*);/)
 
   unless vars && vars.size > 0
-    puts "No content for #{iface}" if PRINT_NO_CONTENT
+    puts "No content for #{iface}" if defined?(PRINT_NO_CONTENT)
     return
   end
-
 
   required = []
   required << iface2file(extends) if extends != 'Base'
@@ -72,12 +97,12 @@ def convert(js)
     required << iface2file(m[1])
   end
 
-  puts "#{iface} extends #{extends}" if extends != 'Base' && PRINT_EXTENDS
-  puts "#{iface} needs #{required.join(', ')}" unless required.empty? || !PRINT_REQUIRED
+  puts "#{iface} extends #{extends}" if extends != 'Base' && defined?(PRINT_EXTENDS)
+  puts "#{iface} needs #{required.join(', ')}" unless required.empty? || !defined?(PRINT_REQUIRED)
 
   return if /^(ProtocolMessage|Request|Event|Response)$/ =~ iface
 
-  file = File.open("lib/dap/#{iface2file(iface)}.rb", 'w')
+  file = open_iface_file(iface)
 
   unless required.empty?
     required.each { |r| file.puts "require_relative '#{r}'" }
@@ -108,6 +133,16 @@ def convert(js)
     file.puts
   end
   file.puts "end"
+end
+
+def open_iface_file(iface)
+  if defined?(PRETEND)
+    puts
+    puts "# --- #{iface} => #{iface2file(iface)}.rb ---"
+    $stdout
+  else
+    File.open("lib/dap/#{iface2file(iface)}.rb", 'w')
+  end
 end
 
 main

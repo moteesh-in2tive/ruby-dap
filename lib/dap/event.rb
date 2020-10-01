@@ -22,20 +22,21 @@ class DAP::Event < DAP::ProtocolMessage
   property :event
 
   property :body, as: one_of(
-    breakpoint: DAP::BreakpointEventBody,
-    capabilities: DAP::CapabilitiesEventBody,
+    initialized: empty,
+    stopped: DAP::StoppedEventBody,
     continued: DAP::ContinuedEventBody,
     exited: DAP::ExitedEventBody,
-    invalidated: DAP::InvalidatedEventBody,
-    loadedSource: DAP::LoadedSourceEventBody,
-    module: DAP::ModuleEventBody,
-    output: DAP::OutputEventBody,
-    process: DAP::ProcessEventBody,
-    progressEnd: DAP::ProgressEndEventBody,
-    progressStart: DAP::ProgressStartEventBody,
-    progressUpdate: DAP::ProgressUpdateEventBody,
-    stopped: DAP::StoppedEventBody,
     terminated: DAP::TerminatedEventBody,
     thread: DAP::ThreadEventBody,
+    output: DAP::OutputEventBody,
+    breakpoint: DAP::BreakpointEventBody,
+    module: DAP::ModuleEventBody,
+    loadedSource: DAP::LoadedSourceEventBody,
+    process: DAP::ProcessEventBody,
+    capabilities: DAP::CapabilitiesEventBody,
+    progressStart: DAP::ProgressStartEventBody,
+    progressUpdate: DAP::ProgressUpdateEventBody,
+    progressEnd: DAP::ProgressEndEventBody,
+    invalidated: DAP::InvalidatedEventBody,
   ).with(:event)
 end

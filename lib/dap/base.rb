@@ -10,6 +10,8 @@ class DAP::Base
 
     return values if values.is_a? klazz
 
+    return klazz.from(values) if klazz < DAP::Enum
+
     klazz.new(values)
   end
 
@@ -35,18 +37,18 @@ class DAP::Base
       DAP::Relation.supported!(as)
 
       names.each do |name|
-        @transformations[name] = ->(value, values, invert: false) { invert ? value.to_h : build(value || {}) { as } }
+        @transformations[name] = ->(value, values, invert: false) { invert ? value.nil? ? nil : value.to_wire : build(value || {}) { as } }
       end
 
     elsif as.is_a? DAP::Relation::Many
       names.each do |name|
-        @transformations[name] = ->(value, values, invert: false) { invert ? (value || []).map(&:to_h) : (value || []).map { |v| build(v) { as.klazz } } }
+        @transformations[name] = ->(value, values, invert: false) { invert ? (value || []).map(&:to_wire) : (value || []).map { |v| build(v) { as.klazz } } }
       end
 
     elsif as.is_a? DAP::Relation::OneOf
       names.each do |name|
         @transformations[name] = ->(value, values, invert: false) do
-          return value.to_h if invert
+          return value.to_wire if invert
 
           build(value || {}) do
             key = values[as.key]&.to_sym
@@ -93,7 +95,7 @@ class DAP::Base
     end
   end
 
-  def to_h
+  def to_wire
     self.class.properties.each_with_object({}) do |k, h|
       if transform = self.class.transform(k)
         h[k] = transform.call(self[k], self, invert: true)

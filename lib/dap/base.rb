@@ -37,7 +37,7 @@ class DAP::Base
       DAP::Relation.supported!(as)
 
       names.each do |name|
-        @transformations[name] = ->(value, values, invert: false) { invert ? value.nil? ? nil : value.to_wire : build(value || {}) { as } }
+        @transformations[name] = ->(value, values, invert: false) { value.nil? ? nil : invert ? value.to_wire : build(value || {}) { as } }
       end
 
     elsif as.is_a? DAP::Relation::Many

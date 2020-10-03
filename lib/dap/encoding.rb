@@ -23,13 +23,7 @@ module DAP::Encoding
     cl = headers[CONTENT_LENGTH_HEADER].to_i
     raise "Invalid content length" unless cl.to_s == headers[CONTENT_LENGTH_HEADER]
 
-    body = ''
-    while body.size < cl do
-      body += s.gets
-    end
-
-    raise "Body larger than content-length" if body.size > cl
-
+    body = s.read(cl)
     values = JSON.parse(body)
     DAP::ProtocolMessage.from(values)
   end
@@ -39,7 +33,7 @@ module DAP::Encoding
 
     headers = {}
 
-    body = JSON.dump(message.to_wire) + "\r\n\r\n"
+    body = JSON.dump(message.to_wire)
     headers[CONTENT_LENGTH_HEADER] = body.size
 
     headers.map { |name, value| "#{name}: #{value}\r\n" }.join + "\r\n" + body

@@ -42,7 +42,7 @@ class DAP::Base
 
     elsif as.is_a? DAP::Relation::Many
       names.each do |name|
-        @transformations[name] = ->(value, values, invert: false) { invert ? (value || []).map(&:to_wire) : (value || []).map { |v| build(v) { as.klazz } } }
+        @transformations[name] = ->(value, values, invert: false) { value.nil? ? nil : invert ? value.map(&:to_wire) : value.map { |v| build(v) { as.klazz } } }
       end
 
     elsif as.is_a? DAP::Relation::OneOf
@@ -97,11 +97,14 @@ class DAP::Base
 
   def to_wire
     self.class.properties.each_with_object({}) do |k, h|
+      next unless v = self[k]
+
       if transform = self.class.transform(k)
-        h[k] = transform.call(self[k], self, invert: true)
-      else
-        h[k] = self[k]
+        v = transform.call(v, self, invert: true)
+        next if v.respond_to?(:empty?) && v.empty?
       end
+
+      h[k] = v
     end
   end
 

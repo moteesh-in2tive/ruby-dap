@@ -21,7 +21,7 @@ class DAP::ProtocolMessage < DAP::Base
 
   def initialize(values)
     super(values)
-    @seq = DAP::ProtocolMessage.seq
+    @seq = values[:seq] || DAP::ProtocolMessage.seq
     @type = self.class.type
   end
 

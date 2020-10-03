@@ -33,21 +33,17 @@ class DAP::Base
 
     klazz = name
 
-    if as.is_a?(Class)
-      DAP::Relation.supported!(as)
+    names.each do |name|
+      if as.is_a?(Class)
+        DAP::Relation.supported!(as)
 
-      names.each do |name|
-        @transformations[name] = ->(value, values, invert: false) { value.nil? ? nil : invert ? value.to_wire : build(value || {}) { as } }
-      end
+        transform = ->(value, values, invert: false) { value.nil? ? nil : invert ? value.to_wire : build(value || {}) { as } }
 
-    elsif as.is_a? DAP::Relation::Many
-      names.each do |name|
-        @transformations[name] = ->(value, values, invert: false) { value.nil? ? nil : invert ? value.map(&:to_wire) : value.map { |v| build(v) { as.klazz } } }
-      end
+      elsif as.is_a? DAP::Relation::Many
+        transform = ->(value, values, invert: false) { value.nil? ? nil : invert ? value.map(&:to_wire) : value.map { |v| build(v) { as.klazz } } }
 
-    elsif as.is_a? DAP::Relation::OneOf
-      names.each do |name|
-        @transformations[name] = ->(value, values, invert: false) do
+      elsif as.is_a? DAP::Relation::OneOf
+        transform = ->(value, values, invert: false) do
           return value.to_wire if invert
 
           build(value || {}) do
@@ -58,13 +54,19 @@ class DAP::Base
             as.types[key]
           end
         end
+
+      elsif !as.nil?
+        raise "Invalid property constraint: #{as.class} #{as.inspect}"
       end
 
-    elsif !as.nil?
-      raise "Invalid property constraint: #{as.class} #{as.inspect}"
+      @properties << {
+        name: name,
+        transform: transform,
+        required: required
+      }
     end
 
-    @properties.push(*names)
+
     attr_reader(*names)
   end
 
@@ -75,17 +77,20 @@ class DAP::Base
     superclass.properties + @properties
   end
 
-  def self.transform(name)
-    @transformations ||= {}
-    return @transformations[name] if self == DAP::Base
+  def self.property_names
+    properties.map { |p| p[:name] }
+  end
 
-    @transformations[name] || superclass.transform(name)
+  def self.transform(name)
+    (@properties || []).each { |p| return p[:transform] if p[:name] == name && p[:transform] }
+
+    return superclass.transform(name) unless self == DAP::Base
   end
 
   def initialize(values)
     values.transform_keys!(&:to_sym)
 
-    self.class.properties.each do |k|
+    self.class.property_names.each do |k|
       v = values[k]
 
       transform = self.class.transform(k)
@@ -95,14 +100,32 @@ class DAP::Base
     end
   end
 
-  def to_wire
-    self.class.properties.each_with_object({}) do |k, h|
-      next unless v = self[k]
-
-      if transform = self.class.transform(k)
-        v = transform.call(v, self, invert: true)
-        next if v.respond_to?(:empty?) && v.empty?
+  def validate!
+    self.class.properties.each do |p|
+      key, required = p[:name], p[:required]
+      value = self[key]
+      if value.nil?
+        raise "Property #{key} of #{self.class} is required" if required
+        next
       end
+
+      if value.respond_to?(:validate!)
+        value.validate!
+      elsif value.respond_to?(:each)
+        value.each { |v| v.validate! if v.respond_to?(:validate!) }
+      end
+    end
+
+    self
+  end
+
+  def to_wire
+    self.class.property_names.each_with_object({}) do |k, h|
+      v = self[k]
+      next if v.nil?
+
+      transform = self.class.transform(k)
+      v = transform.call(v, self, invert: true) if transform
 
       h[k] = v
     end
@@ -110,7 +133,7 @@ class DAP::Base
 
   def [](key)
     key = key.to_sym
-    instance_variable_get("@#{key}".to_sym) if self.class.properties.include? key
+    instance_variable_get("@#{key}".to_sym) if self.class.property_names.include? key
   end
 
   private

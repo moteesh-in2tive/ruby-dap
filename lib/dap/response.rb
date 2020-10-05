@@ -30,6 +30,12 @@ class DAP::Response < DAP::ProtocolMessage
     'response'
   end
 
+  def validate!
+    return unless success
+
+    super
+  end
+
   property :request_seq, :success, :command, :message, :body
 
   property :body, as: one_of(

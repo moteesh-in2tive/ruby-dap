@@ -1,6 +1,3 @@
-# Usage:
-# cat interface.js | ruby convert.rb > lib/dap/interface.rb
-
 PRETEND = true
 
 # PRINT_SKIP = true
@@ -12,9 +9,18 @@ PRETEND = true
 # RESPONSES_ONLY = true
 
 def main
-  # convert($stdin.read)
+  unless file = ARGV.pop
+    STDERR.puts "Usage: ./convert.rb [-|<file>]"
+    exit
+  end
 
-  IO.read('dap-spec.ts').split("\n\n// ---\n\n").each { |s| convert(s) }
+  if file == '-'
+    s = STDIN.read
+  else
+    s = IO.read(file)
+  end
+
+  s.split("\n\n// ---\n\n").each { |s| convert(s) }
 end
 
 def iface2file(iface)

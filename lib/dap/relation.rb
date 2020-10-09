@@ -21,8 +21,13 @@ module DAP::Relation
     end
 
     def with(key)
-      @key = key
-      self
+      o = dup
+      o.instance_eval { @key = key }
+      o
+    end
+
+    def []=(k, v)
+      @types[k] = v
     end
   end
 end

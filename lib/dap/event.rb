@@ -19,24 +19,27 @@ class DAP::Event < DAP::ProtocolMessage
     'event'
   end
 
-  property :event
+  def self.bodies
+    @bodies ||= one_of(
+      initialized: empty,
+      stopped: DAP::StoppedEventBody,
+      continued: DAP::ContinuedEventBody,
+      exited: DAP::ExitedEventBody,
+      terminated: DAP::TerminatedEventBody,
+      thread: DAP::ThreadEventBody,
+      output: DAP::OutputEventBody,
+      breakpoint: DAP::BreakpointEventBody,
+      module: DAP::ModuleEventBody,
+      loadedSource: DAP::LoadedSourceEventBody,
+      process: DAP::ProcessEventBody,
+      capabilities: DAP::CapabilitiesEventBody,
+      progressStart: DAP::ProgressStartEventBody,
+      progressUpdate: DAP::ProgressUpdateEventBody,
+      progressEnd: DAP::ProgressEndEventBody,
+      invalidated: DAP::InvalidatedEventBody,
+    )
+  end
 
-  property :body, as: one_of(
-    initialized: empty,
-    stopped: DAP::StoppedEventBody,
-    continued: DAP::ContinuedEventBody,
-    exited: DAP::ExitedEventBody,
-    terminated: DAP::TerminatedEventBody,
-    thread: DAP::ThreadEventBody,
-    output: DAP::OutputEventBody,
-    breakpoint: DAP::BreakpointEventBody,
-    module: DAP::ModuleEventBody,
-    loadedSource: DAP::LoadedSourceEventBody,
-    process: DAP::ProcessEventBody,
-    capabilities: DAP::CapabilitiesEventBody,
-    progressStart: DAP::ProgressStartEventBody,
-    progressUpdate: DAP::ProgressUpdateEventBody,
-    progressEnd: DAP::ProgressEndEventBody,
-    invalidated: DAP::InvalidatedEventBody,
-  ).with(:event)
+  property :event
+  property :body, as: bodies.with(:event)
 end

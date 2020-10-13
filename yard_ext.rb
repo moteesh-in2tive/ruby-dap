@@ -1,8 +1,8 @@
-module YARD::Templates::Template
-  alias pre_swizzle_render_section render_section
+$pre_swizzle_render_section ||= YARD::Templates::Template.instance_method(:render_section)
 
-  def render_section(section, *args, **kwargs, &block)
-    value = pre_swizzle_render_section(section, *args, **kwargs, &block)
+module YARD::Templates::Template
+  def render_section(section, &block)
+    value = $pre_swizzle_render_section.bind(self).call(section, &block)
     return value unless section.is_a?(YARD::Templates::Section) && section.name == :item_summary
 
     # value.gsub!(/<span class="note title readonly">readonly<\/span>/) { |s| "#{s}<span class='note title optional' style='border-color: #ccc; color: grey; margin-left: 7px;'>optional</span>" } if @item.has_tag?(:optional)

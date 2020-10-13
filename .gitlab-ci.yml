@@ -3,7 +3,7 @@ image: ruby
 pages:
   script:
   - gem install yard
-  - yard -o public -e ./yard_ext.rb
+  - yard -o public
   artifacts:
     paths:
       - public

@@ -1,4 +1,4 @@
-# PRETEND = true
+PRETEND = true
 
 # PRINT_SKIP = true
 # PRINT_NO_CONTENT = true

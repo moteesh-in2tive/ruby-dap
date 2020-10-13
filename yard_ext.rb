@@ -1,7 +1,3 @@
-YARD::Tags::Library.visible_tags |= [
-  YARD::Tags::Library.define_tag('Optional', :optional),
-]
-
 module YARD::Templates::Template
   alias pre_swizzle_render_section render_section
 

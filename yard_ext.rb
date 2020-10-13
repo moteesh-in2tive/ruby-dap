@@ -88,7 +88,11 @@ class PropertyHandler < YARD::Handlers::Ruby::Base
       end
 
     when :const_path_ref
-      as.source
+      if as.source.start_with?('DAP::')
+        as.source[5..]
+      else
+        as.source
+      end
 
     when :fcall
       return unless as[0].type == :ident

@@ -1,3 +1,21 @@
+YARD::Tags::Library.visible_tags |= [
+  YARD::Tags::Library.define_tag('Optional', :optional),
+]
+
+module YARD::Templates::Template
+  alias pre_swizzle_render_section render_section
+
+  def render_section(section, *args, **kwargs, &block)
+    value = pre_swizzle_render_section(section, *args, **kwargs, &block)
+    return value unless section.is_a?(YARD::Templates::Section) && section.name == :item_summary
+
+    # value.gsub!(/<span class="note title readonly">readonly<\/span>/) { |s| "#{s}<span class='note title optional' style='border-color: #ccc; color: grey; margin-left: 7px;'>optional</span>" } if @item.has_tag?(:optional)
+    value.gsub!(/<span class="note title readonly">readonly<\/span>/) { |s| "#{s}<span class='note title required' style='border-color: #555; margin-left: 7px;'>required</span>" } if @item.has_tag?(:required)
+
+    value
+  end
+end
+
 class PropertyHandler < YARD::Handlers::Ruby::Base
   handles method_call(:property)
   namespace_only
@@ -39,7 +57,7 @@ class PropertyHandler < YARD::Handlers::Ruby::Base
       o.source ||= "def #{property}\n  @#{property}end"
       o.signature ||= "def #{property}"
       o.docstring = statement.docstring&.gsub('{', '&#123;')
-      o.add_tag(YARD::Tags::Tag.new(:optional, 'Optional')) unless required
+      o.add_tag(YARD::Tags::Tag.new(required ? :required : :optional, ''))
       o.add_tag(YARD::Tags::Tag.new(:return, "the #{property} attribute", as_type(as)))
 
       namespace.attributes[scope][property][:read] = o

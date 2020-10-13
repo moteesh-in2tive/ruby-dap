@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
     s.name        = 'ruby-dap'
-    s.version     = '0.1.2'
+    s.version     = '0.1.3'
     s.summary     = 'Debug Adapter Protocol'
     s.description = 'Debug Adapter Protocol parsers and formatters'
     s.authors     = ['Ethan Reesor']

@@ -5,7 +5,7 @@ require_relative 'source'
 class DAP::LoadedSourceEventBody < DAP::Base
   # The reason for the event.
   # Values: 'new', 'changed', 'removed', etc.
-  property :reason # 'new' | 'changed' | 'removed'
+  property :reason, as: 'string'
 
   # The new, changed, or removed source.
   property :source, as: DAP::Source

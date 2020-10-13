@@ -6,11 +6,11 @@ class DAP::DataBreakpointInfoResponseBody < DAP::Base
   property :dataId
 
   # UI string that describes on what data the breakpoint is set on or why a data breakpoint is not available.
-  property :description
+  property :description, as: 'string'
 
   # Optional attribute listing the available access types for a potential data breakpoint. A UI frontend could surface this information.
-  property :accessTypes, required: false, as: many(DAP::DataBreakpointAccessType)
+  property :accessTypes, required: false
 
   # Optional attribute indicating that a potential data breakpoint could be persisted across sessions.
-  property :canPersist, required: false
+  property :canPersist, required: false, as: 'boolean'
 end

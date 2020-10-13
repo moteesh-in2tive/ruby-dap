@@ -25,11 +25,15 @@ require_relative 'exception_info_response_body'
 require_relative 'read_memory_response_body'
 require_relative 'disassemble_response_body'
 
+# Response for a request.
 class DAP::Response < DAP::ProtocolMessage
+  # (see ProtocolMessage#type)
   def self.type
     'response'
   end
 
+  # Allowed response commands and their body types.
+  # @return [Hash<Symbol, Class>]
   def self.bodies
     @bodies ||= one_of(
       initialize: DAP::Capabilities,
@@ -78,12 +82,29 @@ class DAP::Response < DAP::ProtocolMessage
     )
   end
 
+  # (see Base#validate!)
   def validate!
     return unless success
 
     super
   end
 
-  property :request_seq, :success, :command, :message
+  # Sequence number of the corresponding request.
+  property :request_seq
+
+  # Outcome of the request.
+  # If true, the request was successful and the 'body' attribute may contain the result of the request.
+  # If the value is false, the attribute 'message' contains the error in short form and the 'body' may contain additional information (see 'ErrorResponse.body.error').
+  property :success
+
+  # The command requested.
+  property :command
+
+  # Contains the raw error in short form if 'success' is false.
+  # This raw error might be interpreted by the frontend and is not shown in the UI.
+  # Some predefined values exist.
+  property :message
+
+  # Contains request result if success is true and optional error details if success is false.
   property :body, as: bodies.with(:command)
 end

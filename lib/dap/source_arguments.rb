@@ -7,5 +7,5 @@ class DAP::SourceArguments < DAP::Base
 
   # The reference to the source. This is the same as source.sourceReference.
   # This is provided for backward compatibility since old backends do not understand the 'source' attribute.
-  property :sourceReference
+  property :sourceReference, as: 'number'
 end

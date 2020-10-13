@@ -2,8 +2,8 @@
 # single target the stepIn request should step.
 class DAP::StepInTarget < DAP::Base
   # Unique identifier for a stepIn target.
-  property :id
+  property :id, as: 'number'
 
   # The name of the stepIn target (shown in the UI).
-  property :label
+  property :label, as: 'string'
 end

@@ -3,3 +3,6 @@ dap-spec.ts
 /*.gem
 /.yardoc
 /doc
+/Gemfile
+/Gemfile.lock
+/.vscode

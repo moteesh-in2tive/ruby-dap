@@ -19,10 +19,12 @@ following in the browser JavaScript console:
 
 ```javascript
 $('.language-typescript').toArray().map(x => {
+    let t = x.innerText;
     x = $(x);
-    let s = x.text();
-    for (x = x.prev('p'); x.length; x = x.prev('p'))
-        s = `// ${x.text()}\n${s}`;
-    return s;
+    let s = [];
+    for (x = x.prev('p, ul'); x.length; x = x.prev('p, ul'))
+        s.unshift(...x.text().split('\n').filter(x => x.indexOf('Values: ') != 0));
+    if (!s.length) return t;
+    return s.map(x => '// ' + x).join('\n') + '\n' + t;
 }).join('\n\n// ---\n\n')
 ```

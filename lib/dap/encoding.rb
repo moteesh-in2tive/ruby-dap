@@ -1,6 +1,11 @@
+# Encoding and decoding for DAP messages
 module DAP::Encoding
+  # The name of the content length header.
   CONTENT_LENGTH_HEADER = 'Content-Length'
 
+  # Decode a DAP message from the stream.
+  # @param s [IO] the stream
+  # @return [ProtocolMessage] the message
   def self.decode(s)
     headers = {}
 
@@ -28,6 +33,9 @@ module DAP::Encoding
     DAP::ProtocolMessage.from(values)
   end
 
+  # Encode a DAP message to a string.
+  # @param message [ProtocolMessage] the message
+  # @return [String] the encoded message
   def self.encode(message)
     raise "Body must be a protocol message" unless message.is_a? DAP::ProtocolMessage
 
@@ -39,6 +47,9 @@ module DAP::Encoding
     headers.map { |name, value| "#{name}: #{value}\r\n" }.join + "\r\n" + body
   end
 
+  # Decode all DAP messages from the stream.
+  # @param s [IO] the stream
+  # @yield Invokes the block for each message
   def self.decode_all(s)
     loop do
       yield decode(s)

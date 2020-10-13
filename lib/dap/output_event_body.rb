@@ -4,10 +4,10 @@ require_relative 'source'
 class DAP::OutputEventBody < DAP::Base
   # The output category. If not specified, 'console' is assumed.
   # Values: 'console', 'stdout', 'stderr', 'telemetry', etc.
-  property :category, required: false # 'console' | 'stdout' | 'stderr' | 'telemetry' | string
+  property :category, required: false, as: 'string'
 
   # The output to report.
-  property :output
+  property :output, as: 'string'
 
   # Support for keeping an output log organized by grouping related messages.
   # Values:
@@ -18,19 +18,19 @@ class DAP::OutputEventBody < DAP::Base
   # 'end': End the current group and decreases the indentation of subsequent output events.
   # A non empty 'output' attribute is shown as the unindented end of the group.
   # etc.
-  property :group, required: false # 'start' | 'startCollapsed' | 'end'
+  property :group, required: false, as: 'string'
 
   # If an attribute 'variablesReference' exists and its value is > 0, the output contains objects which can be retrieved by passing 'variablesReference' to the 'variables' request. The value should be less than or equal to 2147483647 (2^31 - 1).
-  property :variablesReference, required: false
+  property :variablesReference, required: false, as: 'number'
 
   # An optional source location where the output was produced.
   property :source, required: false, as: DAP::Source
 
   # An optional source location line where the output was produced.
-  property :line, required: false
+  property :line, required: false, as: 'number'
 
   # An optional source location column where the output was produced.
-  property :column, required: false
+  property :column, required: false, as: 'number'
 
   # Optional data to report. For the 'telemetry' category the data will be sent to telemetry, for the other categories the data is shown in JSON format.
   property :data, required: false

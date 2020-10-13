@@ -7,11 +7,11 @@ class DAP::SetBreakpointsArguments < DAP::Base
   property :source, as: DAP::Source
 
   # The code locations of the breakpoints.
-  property :breakpoints, required: false, as: many(DAP::SourceBreakpoint)
+  property :breakpoints, required: false
 
   # Deprecated: The code locations of the breakpoints.
   property :lines, required: false
 
   # A value of true indicates that the underlying source has been modified which results in new breakpoint locations.
-  property :sourceModified, required: false
+  property :sourceModified, required: false, as: 'boolean'
 end

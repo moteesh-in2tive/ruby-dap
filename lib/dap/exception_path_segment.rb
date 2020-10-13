@@ -4,7 +4,7 @@
 # matches anything except the names provided if ‘negate’ is true.
 class DAP::ExceptionPathSegment < DAP::Base
   # If false or missing this segment matches the names provided, otherwise it matches anything except the names provided.
-  property :negate, required: false
+  property :negate, required: false, as: 'boolean'
 
   # Depending on the value of 'negate' the names that should match or not match.
   property :names

@@ -7,5 +7,5 @@ class DAP::SetExceptionBreakpointsArguments < DAP::Base
 
   # Configuration options for selected exceptions.
   # The attribute is only honored by a debug adapter if the capability 'supportsExceptionOptions' is true.
-  property :exceptionOptions, required: false, as: many(DAP::ExceptionOptions)
+  property :exceptionOptions, required: false
 end

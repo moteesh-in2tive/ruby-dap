@@ -2,11 +2,11 @@
 # how exceptions are dealt with.
 class DAP::ExceptionBreakpointsFilter < DAP::Base
   # The internal ID of the filter. This value is passed to the setExceptionBreakpoints request.
-  property :filter
+  property :filter, as: 'string'
 
   # The name of the filter. This will be shown in the UI.
-  property :label
+  property :label, as: 'string'
 
   # Initial value of the filter. If not specified a value 'false' is assumed.
-  property :default, required: false
+  property :default, required: false, as: 'boolean'
 end

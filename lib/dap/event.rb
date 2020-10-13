@@ -14,11 +14,15 @@ require_relative 'stopped_event_body'
 require_relative 'terminated_event_body'
 require_relative 'thread_event_body'
 
+# Base class of requests, responses, and events.
 class DAP::Event < DAP::ProtocolMessage
+  # (see ProtocolMessage#type)
   def self.type
     'event'
   end
 
+  # Allowed event kinds and their body types.
+  # @return [Hash<Symbol, Class>]
   def self.bodies
     @bodies ||= one_of(
       initialized: empty,
@@ -40,6 +44,9 @@ class DAP::Event < DAP::ProtocolMessage
     )
   end
 
+  # Type of event.
   property :event
+
+  # Event-specific information.
   property :body, as: bodies.with(:event)
 end

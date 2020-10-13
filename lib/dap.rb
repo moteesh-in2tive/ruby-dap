@@ -1,14 +1,18 @@
 require 'json'
 
+# The Debug Adapter Protocol
 module DAP
+  # (see DAP::Encoding.decode)
   def self.decode(s)
     DAP::Encoding.decode(s)
   end
 
+  # (see DAP::Encoding.encode)
   def self.encode(message)
     DAP::Encoding.encode(message)
   end
 
+  # (see DAP::Encoding.decode_all)
   def self.decode_all(s, &block)
     DAP::Encoding.decode_all(s, &block)
   end

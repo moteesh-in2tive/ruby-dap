@@ -5,8 +5,8 @@
 # that implied this.
 class DAP::ContinuedEventBody < DAP::Base
   # The thread which was continued.
-  property :threadId
+  property :threadId, as: 'number'
 
   # If 'allThreadsContinued' is true, a debug adapter can announce that all threads have continued.
-  property :allThreadsContinued, required: false
+  property :allThreadsContinued, required: false, as: 'boolean'
 end

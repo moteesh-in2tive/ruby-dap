@@ -16,7 +16,7 @@ class DAP::VariablePresentationHint < DAP::Base
   # adapter for rendering purposes, e.g. an index range for large arrays.
   # 'dataBreakpoint': Indicates that a data breakpoint is registered for the object.
   # etc.
-  property :kind, required: false # 'property' | 'method' | 'class' | 'data' | 'event' | 'baseClass' | 'innerClass' | 'interface' | 'mostDerivedClass' | 'virtual' | 'dataBreakpoint' | string
+  property :kind, required: false, as: 'string'
 
   # Set of attributes represented as an array of strings. Before introducing additional values, try to use the listed values.
   # Values:
@@ -28,9 +28,9 @@ class DAP::VariablePresentationHint < DAP::Base
   # 'canHaveObjectId': Indicates that the object has an Object ID associated with it.
   # 'hasSideEffects': Indicates that the evaluation had side effects.
   # etc.
-  property :attributes, required: false # ('static' | 'constant' | 'readOnly' | 'rawString' | 'hasObjectId' | 'canHaveObjectId' | 'hasSideEffects' | string)[]
+  property :attributes, required: false, as: 'string'
 
   # Visibility of variable. Before introducing additional values, try to use the listed values.
   # Values: 'public', 'private', 'protected', 'internal', 'final', etc.
-  property :visibility, required: false # 'public' | 'private' | 'protected' | 'internal' | 'final' | string
+  property :visibility, required: false, as: 'string'
 end

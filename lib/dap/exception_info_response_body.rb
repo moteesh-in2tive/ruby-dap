@@ -4,10 +4,10 @@ require_relative 'exception_details'
 # Response to ‘exceptionInfo’ request.
 class DAP::ExceptionInfoResponseBody < DAP::Base
   # ID of the exception that was thrown.
-  property :exceptionId
+  property :exceptionId, as: 'string'
 
   # Descriptive text for the exception provided by the debug adapter.
-  property :description, required: false
+  property :description, required: false, as: 'string'
 
   # Mode that caused the exception notification to be raised.
   property :breakMode, as: DAP::ExceptionBreakMode

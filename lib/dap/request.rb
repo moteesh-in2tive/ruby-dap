@@ -37,11 +37,15 @@ require_relative 'exception_info_arguments'
 require_relative 'read_memory_arguments'
 require_relative 'disassemble_arguments'
 
+# A client or debug adapter initiated request.
 class DAP::Request < DAP::ProtocolMessage
+  # (see ProtocolMessage#type)
   def self.type
     'request'
   end
 
+  # Allowed request commands and their arguments types.
+  # @return [Hash<Symbol, Class>]
   def self.arguments
     @arguments ||= one_of(
       cancel: DAP::CancelArguments,
@@ -89,6 +93,9 @@ class DAP::Request < DAP::ProtocolMessage
     )
   end
 
+  # The command to execute.
   property :command
+
+  # Object containing arguments for the command.
   property :arguments, as: arguments.with(:command)
 end

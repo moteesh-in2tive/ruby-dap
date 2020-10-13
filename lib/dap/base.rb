@@ -1,4 +1,9 @@
+# Base class for DAP types
 class DAP::Base
+  # Build an instance of a DAP type.
+  # @param values [Hash|String] attribute values or enum string
+  # @yieldparam values [Hash] normalized attribute values (optional)
+  # @yieldreturn [Class] the class to instantiate
   def self.build(values, &block)
     values.transform_keys! &:to_sym if values.is_a? Hash
 
@@ -15,18 +20,32 @@ class DAP::Base
     klazz.new(values)
   end
 
+  # Returns a relation that indicates a property should be an array of the
+  # specified type.
+  # @param klazz [Class] the expected type of members of the property
+  # @return [Relation::Many]
   def self.many(klazz)
     DAP::Relation::Many.new(klazz)
   end
 
+  # Returns a relation that indicates a property should be one of a set of
+  # types.
+  # @param choices [Hash[String, Class]] the allowed property types
+  # @return [Relation::OneOf]
   def self.one_of(choices)
     DAP::Relation::OneOf.new(choices)
   end
 
+  # Returns a relation that indicates a property is expected to be an empty
+  # object.
   def self.empty
     Class.new(DAP::Base)
   end
 
+  # Defines a property or properties.
+  # @param names [Array<Symbol>] the properties
+  # @param as [Class|Relation|String] the expected type of the property
+  # @param required [Boolean] whether the property is required
   def self.property(*names, as: nil, required: true)
     @properties ||= []
     @transformations ||= {}
@@ -34,15 +53,19 @@ class DAP::Base
     klazz = name
 
     names.each do |name|
-      if as.is_a?(Class)
+      case as
+      when nil, String
+        # ignore
+
+      when Class
         DAP::Relation.supported!(as)
 
         transform = ->(value, values, invert: false) { value.nil? ? nil : invert ? value.to_wire : build(value || {}) { as } }
 
-      elsif as.is_a? DAP::Relation::Many
+      when DAP::Relation::Many
         transform = ->(value, values, invert: false) { value.nil? ? nil : invert ? value.map(&:to_wire) : value.map { |v| build(v) { as.klazz } } }
 
-      elsif as.is_a? DAP::Relation::OneOf
+      when DAP::Relation::OneOf
         transform = ->(value, values, invert: false) do
           return value.to_wire if invert
 
@@ -55,7 +78,7 @@ class DAP::Base
           end
         end
 
-      elsif !as.nil?
+      else
         raise "Invalid property constraint: #{as.class} #{as.inspect}"
       end
 
@@ -70,6 +93,7 @@ class DAP::Base
     attr_reader(*names)
   end
 
+  # Properties of the receiver.
   def self.properties
     @properties ||= []
     return @properties if self == DAP::Base
@@ -77,16 +101,22 @@ class DAP::Base
     superclass.properties + @properties
   end
 
+  # Names of the receiver's properties.
   def self.property_names
     properties.map { |p| p[:name] }
   end
 
+  # Retreives the transform for the named property.
+  # @param name [String] the property name
+  # @return [Proc] the transform
   def self.transform(name)
     (@properties || []).each { |p| return p[:transform] if p[:name] == name && p[:transform] }
 
     return superclass.transform(name) unless self == DAP::Base
   end
 
+  # Create a new instance of the receiver.
+  # @param values [Hash] the object's attributes
   def initialize(values)
     values.transform_keys!(&:to_sym)
 
@@ -100,6 +130,7 @@ class DAP::Base
     end
   end
 
+  # Validate property values against their expectations.
   def validate!
     self.class.properties.each do |p|
       key, required = p[:name], p[:required]
@@ -119,6 +150,8 @@ class DAP::Base
     self
   end
 
+  # Convert the receiver to a form suitable for encoding.
+  # @return [Hash]
   def to_wire
     self.class.property_names.each_with_object({}) do |k, h|
       v = self[k]
@@ -131,6 +164,9 @@ class DAP::Base
     end
   end
 
+  # Retreive a property by name.
+  # @param key [String] the property name
+  # @return the property value
   def [](key)
     key = key.to_sym
     instance_variable_get("@#{key}".to_sym) if self.class.property_names.include? key

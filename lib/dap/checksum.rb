@@ -6,5 +6,5 @@ class DAP::Checksum < DAP::Base
   property :algorithm, as: DAP::ChecksumAlgorithm
 
   # Value of the checksum.
-  property :checksum
+  property :checksum, as: 'string'
 end

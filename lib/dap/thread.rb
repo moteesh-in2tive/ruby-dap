@@ -1,8 +1,8 @@
 # A Thread
 class DAP::Thread < DAP::Base
   # Unique identifier for the thread.
-  property :id
+  property :id, as: 'number'
 
   # A name of the thread.
-  property :name
+  property :name, as: 'string'
 end

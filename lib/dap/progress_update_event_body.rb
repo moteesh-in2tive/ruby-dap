@@ -6,11 +6,11 @@
 # request.
 class DAP::ProgressUpdateEventBody < DAP::Base
   # The ID that was introduced in the initial 'progressStart' event.
-  property :progressId
+  property :progressId, as: 'string'
 
   # Optional, more detailed progress message. If omitted, the previous message (if any) is used.
-  property :message, required: false
+  property :message, required: false, as: 'string'
 
   # Optional progress percentage to display (value range: 0 to 100). If omitted no percentage will be shown.
-  property :percentage, required: false
+  property :percentage, required: false, as: 'number'
 end

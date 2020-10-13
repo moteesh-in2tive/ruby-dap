@@ -1,4 +1,4 @@
-PRETEND = true
+# PRETEND = true
 
 # PRINT_SKIP = true
 # PRINT_NO_CONTENT = true
@@ -101,10 +101,26 @@ def convert(js)
     iface = m[:type]
     enums = m[:values].split(' | ')
 
+    comment_lines = []
+    value_comments = {}
+    comment.split("\n").each do |l|
+      l = l[3..]
+      if m = l.match(/^\s*‘?(?<value>\w+)’?: (?<comment>.*?)[,.]?$/)
+        value_comments[m[:value]] = m[:comment]
+      else
+        comment_lines << l
+      end
+    end
+
     file = open_iface_file(iface)
     first = true
+    file.puts wrap(comment_lines.join("\n"), 79).map { |c| "# #{c}" } if comment
     file.puts "class DAP::#{iface} < DAP::Enum"
-    enums.each { |e| file.puts "  #{e[1...-1].upcase} = new(#{e})" }
+    enums.each do |e|
+      v = e[1...-1]
+      file.puts wrap(value_comments[v], 77).map { |c| "  # #{c}" } if value_comments.key?(v)
+      file.puts "  #{v.upcase} = new(#{e})"
+    end
     file.puts "end"
     return
 
@@ -159,14 +175,16 @@ def convert(js)
     comment.scan(/   \* (.*)\n/).map { |c| file.puts "  # #{c[0]}" }
     file.write "  property :#{name}"
     file.write ", required: false" if optional == '?'
-    unless /^[a-z]/ =~ type
-      if (m = type.match(/^(\w+)$/)) && m[1] != 'InvalidatedAreas'
-        file.write ", as: DAP::#{type}"
-      elsif (m = type.match(/^(\w+)\[\]$/)) && m[1] != 'InvalidatedAreas'
-        file.write ", as: many(DAP::#{type[0...-2]})"
-      else
-        file.write " # #{type}"
-      end
+    if type.match(/('\w+' \| )*'\w+'( | string)?/)
+      file.write ", as: 'string'"
+    elsif type == 'any' || type.match(/[^\w]/)
+      # ignore
+    elsif (m = type.match(/^([A-Z]\w*)(\[\])?$/)).nil? || m[1] == 'InvalidatedAreas'
+      file.write ", as: '#{type}'"
+    elsif m[2] == '[]'
+      file.write ", as: many(DAP::#{type[0...-2]})"
+    else
+      file.write ", as: DAP::#{type}"
     end
     file.puts
   end

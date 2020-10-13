@@ -1,4 +1,7 @@
+# Base class of requests, responses, and events.
 class DAP::ProtocolMessage < DAP::Base
+  # Valid protocol message types.
+  # @return [Hash<Symbol,Class>]
   def self.types
     @types ||= {
       request: DAP::Request,
@@ -7,6 +10,8 @@ class DAP::ProtocolMessage < DAP::Base
     }
   end
 
+  # Create a protocol message from attribute values.
+  # @param values [Hash] the attribute values
   def self.from(values)
     build(values) do |v|
       key = v[:type]&.to_sym
@@ -17,8 +22,14 @@ class DAP::ProtocolMessage < DAP::Base
     end
   end
 
-  property :seq, :type
+  # Sequence number (also known as message ID). For protocol messages of type
+  # 'request' this ID can be used to cancel the request.
+  property :seq, as: 'number'
 
+  # Message type.
+  property :type, as: 'string'
+
+  # (see Base#initialize)
   def initialize(values)
     super(values)
     @seq = values[:seq] || DAP::ProtocolMessage.seq

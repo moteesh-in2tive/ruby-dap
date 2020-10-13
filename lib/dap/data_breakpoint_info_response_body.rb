@@ -1,5 +1,6 @@
 require_relative 'data_breakpoint_access_type'
 
+# Response to ‘dataBreakpointInfo’ request.
 class DAP::DataBreakpointInfoResponseBody < DAP::Base
   # An identifier for the data on which a data breakpoint can be registered with the setDataBreakpoints request or null if no data breakpoint is available.
   property :dataId

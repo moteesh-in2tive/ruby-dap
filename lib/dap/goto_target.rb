@@ -1,3 +1,6 @@
+# A GotoTarget describes a code location that can be used as a target in the
+# ‘goto’ request. The possible goto targets can be determined via the
+# ‘gotoTargets’ request.
 class DAP::GotoTarget < DAP::Base
   # Unique identifier for a goto target. This is used in the goto request.
   property :id

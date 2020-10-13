@@ -1,3 +1,4 @@
+# Arguments for ‘initialize’ request.
 class DAP::InitializeRequestArguments < DAP::Base
   # The ID of the (frontend) client using this adapter.
   property :clientID, required: false

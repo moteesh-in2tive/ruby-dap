@@ -1,3 +1,4 @@
+# Arguments for ‘modules’ request.
 class DAP::ModulesArguments < DAP::Base
   # The index of the first module to return; if omitted modules start at 0.
   property :startModule, required: false

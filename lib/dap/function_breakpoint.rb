@@ -1,3 +1,4 @@
+# Properties of a breakpoint passed to the setFunctionBreakpoints request.
 class DAP::FunctionBreakpoint < DAP::Base
   # The name of the function.
   property :name

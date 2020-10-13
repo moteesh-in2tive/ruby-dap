@@ -1,5 +1,6 @@
 require_relative 'completion_item_type'
 
+# CompletionItems are the suggestions returned from the CompletionsRequest.
 class DAP::CompletionItem < DAP::Base
   # The label of this completion item. By default this is also the text that is inserted when selecting this completion.
   property :label

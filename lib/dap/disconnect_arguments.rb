@@ -1,3 +1,4 @@
+# Arguments for ‘disconnect’ request.
 class DAP::DisconnectArguments < DAP::Base
   # A value of true indicates that this 'disconnect' request is part of a restart sequence.
   property :restart, required: false

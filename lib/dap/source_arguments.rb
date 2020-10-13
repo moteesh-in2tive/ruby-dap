@@ -1,5 +1,6 @@
 require_relative 'source'
 
+# Arguments for ‘source’ request.
 class DAP::SourceArguments < DAP::Base
   # Specifies the source content to load. Either source.path or source.sourceReference must be specified.
   property :source, required: false, as: DAP::Source

@@ -1,5 +1,6 @@
 require_relative 'stepping_granularity'
 
+# Arguments for ‘next’ request.
 class DAP::NextArguments < DAP::Base
   # Execute 'next' for this thread.
   property :threadId

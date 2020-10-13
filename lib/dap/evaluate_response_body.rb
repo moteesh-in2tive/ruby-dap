@@ -1,5 +1,6 @@
 require_relative 'variable_presentation_hint'
 
+# Response to ‘evaluate’ request.
 class DAP::EvaluateResponseBody < DAP::Base
   # The result of the evaluate request.
   property :result

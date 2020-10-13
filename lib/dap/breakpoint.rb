@@ -1,5 +1,7 @@
 require_relative 'source'
 
+# Information about a Breakpoint created in setBreakpoints,
+# setFunctionBreakpoints, setInstructionBreakpoints, or setDataBreakpoints.
 class DAP::Breakpoint < DAP::Base
   # An optional identifier for the breakpoint. It is needed if breakpoint events are used to update or remove breakpoints.
   property :id, required: false

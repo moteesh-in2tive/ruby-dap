@@ -1,5 +1,6 @@
 require_relative 'value_format'
 
+# Arguments for ‘setExpression’ request.
 class DAP::SetExpressionArguments < DAP::Base
   # The l-value expression to assign to.
   property :expression

@@ -1,5 +1,6 @@
 require_relative 'source'
 
+# Represents a single disassembled instruction.
 class DAP::DisassembledInstruction < DAP::Base
   # The address of the instruction. Treated as a hex value if prefixed with '0x', or as a decimal value otherwise.
   property :address

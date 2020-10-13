@@ -1,5 +1,6 @@
 require_relative 'stepping_granularity'
 
+# Arguments for ‘stepOut’ request.
 class DAP::StepOutArguments < DAP::Base
   # Execute 'stepOut' for this thread.
   property :threadId

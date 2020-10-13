@@ -1,3 +1,4 @@
+# Response to ‘readMemory’ request.
 class DAP::ReadMemoryResponseBody < DAP::Base
   # The address of the first byte of data returned.
   # Treated as a hex value if prefixed with '0x', or as a decimal value otherwise.

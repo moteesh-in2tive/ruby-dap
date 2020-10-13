@@ -1,5 +1,6 @@
 require_relative 'source'
 
+# The event indicates that the target has produced some output.
 class DAP::OutputEventBody < DAP::Base
   # The output category. If not specified, 'console' is assumed.
   # Values: 'console', 'stdout', 'stderr', 'telemetry', etc.

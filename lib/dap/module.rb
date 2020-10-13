@@ -1,3 +1,12 @@
+# A Module object represents a row in the modules view. Two attributes are
+# mandatory: an id identifies a module in the modules view and is used in a
+# ModuleEvent for identifying a module for adding, updating or deleting. The name
+# is used to minimally render the module in the UI. Additional attributes can be
+# added to the module. They will show up in the module View if they have a
+# corresponding ColumnDescriptor. To avoid an unnecessary proliferation of
+# additional attributes with similar semantics but different names we recommend to
+# re-use attributes from the ‘recommended’ list below first, and only introduce
+# new attributes if nothing appropriate could be found.
 class DAP::Module < DAP::Base
   # Unique identifier for the module.
   property :id

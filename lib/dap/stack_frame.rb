@@ -1,5 +1,6 @@
 require_relative 'source'
 
+# A Stackframe contains the source location.
 class DAP::StackFrame < DAP::Base
   # An identifier for the stack frame. It must be unique across all threads.
   # This id can be used to retrieve the scopes of the frame with the 'scopesRequest' or to restart the execution of a stackframe.

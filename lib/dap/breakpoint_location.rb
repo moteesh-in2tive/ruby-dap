@@ -1,3 +1,5 @@
+# Properties of a breakpoint location returned from the ‘breakpointLocations’
+# request.
 class DAP::BreakpointLocation < DAP::Base
   # Start line of breakpoint location.
   property :line

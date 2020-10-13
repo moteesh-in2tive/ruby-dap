@@ -1,3 +1,4 @@
+# Properties of a breakpoint or logpoint passed to the setBreakpoints request.
 class DAP::SourceBreakpoint < DAP::Base
   # The source line of the breakpoint or logpoint.
   property :line

@@ -27,6 +27,30 @@ def iface2file(iface)
   iface.gsub(/(^|[a-z])([A-Z])/) { |m| m.size == 1 ? m.downcase : m[0] + '_' + m[1].downcase }
 end
 
+def wrap(s, n)
+  r = []
+  s = s.split(' ')
+
+  l = ''
+  until s.empty?
+    if l.empty?
+      l = s.shift
+      next
+    end
+
+    w = s.shift
+    if l.size + w.size + 1 > n
+      r << l
+      l = w
+    else
+      l = "#{l} #{w}"
+    end
+  end
+
+  r << l unless l.empty?
+  r
+end
+
 def convert(js)
   if defined?(REQUESTS_ONLY)
     if m = js.match(/interface \w+Request extends Request {\n  command: '(?<command>\w+)';(?:\n\n  arguments\??: (?<arguments>\w+);|.*)\n}/m)
@@ -49,17 +73,20 @@ def convert(js)
     return
   end
 
-  if m = js.match(/interface (?<interface>\w+)Event extends Event {\n  event: '\w+';\n\n  body\??: {\n(?<body>.*)\n  };\n}/m)
+  if m = js.match(/(?<comment>(?:\/\/ .*\n)+)?interface (?<interface>\w+)Event extends Event {\n  event: '\w+';\n\n  body\??: {\n(?<body>.*)\n  };\n}/m)
+    comment = m[:comment]
     iface = m[:interface] + 'EventBody'
     extends = 'Base'
     body = m[:body].split("\n").map { |l| l[2..] }.join("\n")
 
-  elsif m = js.match(/interface (?<interface>\w+)Response extends Response {\n  body\??: {\n(?<body>.*)\n  };\n}/m)
+  elsif m = js.match(/(?<comment>(?:\/\/ .*\n)+)?interface (?<interface>\w+)Response extends Response {\n  body\??: {\n(?<body>.*)\n  };\n}/m)
+    comment = m[:comment]
     iface = m[:interface] + 'ResponseBody'
     extends = 'Base'
     body = m[:body].split("\n").map { |l| l[2..] }.join("\n")
 
-  elsif m = js.match(/interface (?<interface>\w+)(?: extends (?<extends>\w+))? {\n(?<body>.*)\n?}/m)
+  elsif m = js.match(/(?<comment>(?:\/\/ .*\n)+)?interface (?<interface>\w+)(?: extends (?<extends>\w+))? {\n(?<body>.*)\n?}/m)
+    comment = m[:comment]
     iface = m[:interface]
     extends = m[:extends] || 'Base'
     body = m[:body]
@@ -69,9 +96,10 @@ def convert(js)
       return
     end
 
-  elsif m = js.match(/type (\w+) = ((?:'\w+' \| )*'\w+');/)
-    iface = m[1]
-    enums = m[2].split(' | ')
+  elsif m = js.match(/(?<comment>(?:\/\/ .*\n)+)?type (?<type>\w+) = (?<values>(?:'\w+' \| )*'\w+');/)
+    comment = m[:comment]
+    iface = m[:type]
+    enums = m[:values].split(' | ')
 
     file = open_iface_file(iface)
     first = true
@@ -114,6 +142,9 @@ def convert(js)
     required.each { |r| file.puts "require_relative '#{r}'" }
     file.puts
   end
+
+
+  file.puts wrap(comment.split("\n").map { |l| l[3..] }.join("\n"), 80).map { |c| "# #{c}" } if comment
 
   file.puts "class DAP::#{iface} < DAP::#{extends}"
 

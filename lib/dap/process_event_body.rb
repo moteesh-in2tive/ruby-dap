@@ -1,3 +1,5 @@
+# The event indicates that the debugger has begun debugging a new process. Either
+# one that it has launched, or one that it has attached to.
 class DAP::ProcessEventBody < DAP::Base
   # The logical name of the process. This is usually the full path to process's executable file. Example: /home/example/myproj/program.js.
   property :name

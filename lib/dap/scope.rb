@@ -1,5 +1,7 @@
 require_relative 'source'
 
+# A Scope is a named container for variables. Optionally a scope can map to a
+# source or a range within a source.
 class DAP::Scope < DAP::Base
   # Name of the scope such as 'Arguments', 'Locals', or 'Registers'. This string is shown in the UI as is and can be translated.
   property :name

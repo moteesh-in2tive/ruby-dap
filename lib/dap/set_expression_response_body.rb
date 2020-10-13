@@ -1,5 +1,6 @@
 require_relative 'variable_presentation_hint'
 
+# Response to ‘setExpression’ request.
 class DAP::SetExpressionResponseBody < DAP::Base
   # The new value of the expression.
   property :value

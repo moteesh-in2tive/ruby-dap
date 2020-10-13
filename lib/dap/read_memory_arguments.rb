@@ -1,3 +1,4 @@
+# Arguments for ‘readMemory’ request.
 class DAP::ReadMemoryArguments < DAP::Base
   # Memory reference to the base location from which data should be read.
   property :memoryReference

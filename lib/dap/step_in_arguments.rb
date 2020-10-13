@@ -1,5 +1,6 @@
 require_relative 'stepping_granularity'
 
+# Arguments for ‘stepIn’ request.
 class DAP::StepInArguments < DAP::Base
   # Execute 'stepIn' for this thread.
   property :threadId

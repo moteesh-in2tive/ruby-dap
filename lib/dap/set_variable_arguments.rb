@@ -1,5 +1,6 @@
 require_relative 'value_format'
 
+# Arguments for ‘setVariable’ request.
 class DAP::SetVariableArguments < DAP::Base
   # The reference of the variable container.
   property :variablesReference

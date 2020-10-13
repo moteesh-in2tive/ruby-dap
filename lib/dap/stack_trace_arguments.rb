@@ -1,5 +1,6 @@
 require_relative 'stack_frame_format'
 
+# Arguments for ‘stackTrace’ request.
 class DAP::StackTraceArguments < DAP::Base
   # Retrieve the stacktrace for this thread.
   property :threadId

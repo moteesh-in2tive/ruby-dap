@@ -1,3 +1,4 @@
+# A structured message object. Used to return errors from requests.
 class DAP::Message < DAP::Base
   # Unique identifier for the message.
   property :id

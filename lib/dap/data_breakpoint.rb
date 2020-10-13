@@ -1,5 +1,6 @@
 require_relative 'data_breakpoint_access_type'
 
+# Properties of a data breakpoint passed to the setDataBreakpoints request.
 class DAP::DataBreakpoint < DAP::Base
   # An id representing the data. This id is returned from the dataBreakpointInfo request.
   property :dataId

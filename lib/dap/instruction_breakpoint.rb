@@ -1,3 +1,4 @@
+# Properties of a breakpoint passed to the setInstructionBreakpoints request
 class DAP::InstructionBreakpoint < DAP::Base
   # The instruction reference of the breakpoint.
   # This should be a memory or instruction pointer reference from an EvaluateResponse, Variable, StackFrame, GotoTarget, or Breakpoint.

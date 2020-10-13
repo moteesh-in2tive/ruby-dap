@@ -1,5 +1,6 @@
 require_relative 'value_format'
 
+# Provides formatting information for a stack frame.
 class DAP::StackFrameFormat < DAP::ValueFormat
   # Displays parameters for the stack frame.
   property :parameters, required: false

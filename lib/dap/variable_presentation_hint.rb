@@ -1,3 +1,5 @@
+# Optional properties of a variable that can be used to determine how to render
+# the variable in the UI.
 class DAP::VariablePresentationHint < DAP::Base
   # The kind of variable. Before introducing additional values, try to use the listed values.
   # Values:

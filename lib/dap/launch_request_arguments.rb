@@ -1,3 +1,5 @@
+# Arguments for ‘launch’ request. Additional attributes are implementation
+# specific.
 class DAP::LaunchRequestArguments < DAP::Base
   # If noDebug is true the launch request should launch the program without enabling debugging.
   property :noDebug, required: false

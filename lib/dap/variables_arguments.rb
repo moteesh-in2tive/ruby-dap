@@ -1,5 +1,6 @@
 require_relative 'value_format'
 
+# Arguments for ‘variables’ request.
 class DAP::VariablesArguments < DAP::Base
   # The Variable reference.
   property :variablesReference

@@ -1,5 +1,6 @@
 require_relative 'stepping_granularity'
 
+# Arguments for ‘stepBack’ request.
 class DAP::StepBackArguments < DAP::Base
   # Execute 'stepBack' for this thread.
   property :threadId

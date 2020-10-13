@@ -1,3 +1,4 @@
+# Response to ‘source’ request.
 class DAP::SourceResponseBody < DAP::Base
   # Content of the source reference.
   property :content

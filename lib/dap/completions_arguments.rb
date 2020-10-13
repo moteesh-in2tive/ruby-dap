@@ -1,3 +1,4 @@
+# Arguments for ‘completions’ request.
 class DAP::CompletionsArguments < DAP::Base
   # Returns completions in the scope of this stack frame. If not specified, the completions are returned for the global scope.
   property :frameId, required: false

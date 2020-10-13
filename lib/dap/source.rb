@@ -1,6 +1,8 @@
 require_relative 'source'
 require_relative 'checksum'
 
+# A Source is a descriptor for source code. It is returned from the debug adapter
+# as part of a StackFrame and it is used by clients when specifying breakpoints.
 class DAP::Source < DAP::Base
   # The short name of the source. Every source returned from the debug adapter has a name.
   # When sending a source to the debug adapter this name is optional.

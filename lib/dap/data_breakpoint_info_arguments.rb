@@ -1,3 +1,4 @@
+# Arguments for ‘dataBreakpointInfo’ request.
 class DAP::DataBreakpointInfoArguments < DAP::Base
   # Reference to the Variable container if the data breakpoint is requested for a child of the container.
   property :variablesReference, required: false

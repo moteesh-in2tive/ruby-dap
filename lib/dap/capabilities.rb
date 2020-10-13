@@ -2,6 +2,7 @@ require_relative 'exception_breakpoints_filter'
 require_relative 'column_descriptor'
 require_relative 'checksum_algorithm'
 
+# Information about the capabilities of a debug adapter.
 class DAP::Capabilities < DAP::Base
   # The debug adapter supports the 'configurationDone' request.
   property :supportsConfigurationDoneRequest, required: false

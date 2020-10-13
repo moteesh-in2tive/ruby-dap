@@ -1,3 +1,4 @@
+# Arguments for ‘disassemble’ request.
 class DAP::DisassembleArguments < DAP::Base
   # Memory reference to the base location containing the instructions to disassemble.
   property :memoryReference

@@ -1,3 +1,6 @@
+# The event indicates that the execution of the debuggee has stopped due to some
+# condition. This can be caused by a break point previously set, a stepping
+# request has completed, by executing a debugger statement etc.
 class DAP::StoppedEventBody < DAP::Base
   # The reason for the event.
   # For backward compatibility this string is shown in the UI if the 'description' attribute is missing (but it must not be translated).

@@ -1,5 +1,6 @@
 require_relative 'value_format'
 
+# Arguments for ‘evaluate’ request.
 class DAP::EvaluateArguments < DAP::Base
   # The expression to evaluate.
   property :expression

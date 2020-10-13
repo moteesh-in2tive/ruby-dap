@@ -1,6 +1,7 @@
 require_relative 'exception_break_mode'
 require_relative 'exception_details'
 
+# Response to ‘exceptionInfo’ request.
 class DAP::ExceptionInfoResponseBody < DAP::Base
   # ID of the exception that was thrown.
   property :exceptionId

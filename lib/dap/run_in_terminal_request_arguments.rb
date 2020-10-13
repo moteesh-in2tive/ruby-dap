@@ -1,3 +1,4 @@
+# Arguments for ‘runInTerminal’ request.
 class DAP::RunInTerminalRequestArguments < DAP::Base
   # What kind of terminal to launch.
   # Values: 'integrated', 'external', etc.

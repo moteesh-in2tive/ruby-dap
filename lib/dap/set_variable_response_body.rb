@@ -1,3 +1,4 @@
+# Response to ‘setVariable’ request.
 class DAP::SetVariableResponseBody < DAP::Base
   # The new value of the variable.
   property :value

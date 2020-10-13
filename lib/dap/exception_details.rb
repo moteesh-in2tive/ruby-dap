@@ -1,5 +1,6 @@
 require_relative 'exception_details'
 
+# Detailed information about an exception that has occurred.
 class DAP::ExceptionDetails < DAP::Base
   # Message contained in the exception.
   property :message, required: false

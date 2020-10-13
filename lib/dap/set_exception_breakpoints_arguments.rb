@@ -1,5 +1,6 @@
 require_relative 'exception_options'
 
+# Arguments for ‘setExceptionBreakpoints’ request.
 class DAP::SetExceptionBreakpointsArguments < DAP::Base
   # IDs of checked exception options. The set of IDs is returned via the 'exceptionBreakpointFilters' capability.
   property :filters

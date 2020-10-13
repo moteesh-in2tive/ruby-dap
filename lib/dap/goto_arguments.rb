@@ -1,3 +1,4 @@
+# Arguments for ‘goto’ request.
 class DAP::GotoArguments < DAP::Base
   # Set the goto target for this thread.
   property :threadId

@@ -1,6 +1,7 @@
 require_relative 'source'
 require_relative 'source_breakpoint'
 
+# Arguments for ‘setBreakpoints’ request.
 class DAP::SetBreakpointsArguments < DAP::Base
   # The source location of the breakpoints; either 'source.path' or 'source.reference' must be specified.
   property :source, as: DAP::Source

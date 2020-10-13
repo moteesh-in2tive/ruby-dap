@@ -18,5 +18,5 @@ class DAP::ExceptionDetails < DAP::Base
   property :stackTrace, required: false, as: 'string'
 
   # Details of the exception contained by this exception, if any.
-  property :innerException, required: false
+  property :innerException, required: false, as: many(DAP::ExceptionDetails)
 end

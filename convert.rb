@@ -177,7 +177,7 @@ def convert(js)
     file.write ", required: false" if optional == '?'
     if type.match(/('\w+' \| )*'\w+'( | string)?/)
       file.write ", as: 'string'"
-    elsif type == 'any' || type.match(/[^\w]/)
+    elsif type == 'any' || type.match(/[^\w\[\]]/)
       # ignore
     elsif (m = type.match(/^([A-Z]\w*)(\[\])?$/)).nil? || m[1] == 'InvalidatedAreas'
       file.write ", as: '#{type}'"

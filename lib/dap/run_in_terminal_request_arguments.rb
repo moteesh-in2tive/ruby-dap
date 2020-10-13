@@ -11,7 +11,7 @@ class DAP::RunInTerminalRequestArguments < DAP::Base
   property :cwd, as: 'string'
 
   # List of arguments. The first argument is the command to run.
-  property :args
+  property :args, as: 'string[]'
 
   # Environment key-value pairs that are added to or removed from the default environment.
   property :env, required: false

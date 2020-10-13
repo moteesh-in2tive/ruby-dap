@@ -26,12 +26,12 @@ class DAP::Source < DAP::Base
   property :origin, required: false, as: 'string'
 
   # An optional list of sources that are related to this source. These may be the source that generated this source.
-  property :sources, required: false
+  property :sources, required: false, as: many(DAP::Source)
 
   # Optional data that a debug adapter might want to loop through the client.
   # The client should leave the data intact and persist it across sessions. The client should not interpret the data.
   property :adapterData, required: false
 
   # The checksums associated with this file.
-  property :checksums, required: false
+  property :checksums, required: false, as: many(DAP::Checksum)
 end

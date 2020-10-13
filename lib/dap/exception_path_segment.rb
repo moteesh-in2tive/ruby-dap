@@ -7,5 +7,5 @@ class DAP::ExceptionPathSegment < DAP::Base
   property :negate, required: false, as: 'boolean'
 
   # Depending on the value of 'negate' the names that should match or not match.
-  property :names
+  property :names, as: 'string[]'
 end

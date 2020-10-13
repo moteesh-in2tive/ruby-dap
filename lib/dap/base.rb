@@ -157,16 +157,16 @@ class DAP::Base
       v = self[k]
       next if v.nil?
 
-      transform = self.class.transform(k)
-      v = transform.call(v, self, invert: true) if transform
+      if transform = self.class.transform(k)
+        v = transform.call(v, self, invert: true) if transform
+      else
+        v = convert_complex(v)
+      end
 
       h[k] = v
     end
   end
 
-  # Retreive a property by name.
-  # @param key [String] the property name
-  # @return the property value
   def [](key)
     key = key.to_sym
     instance_variable_get("@#{key}".to_sym) if self.class.property_names.include? key
@@ -177,5 +177,18 @@ class DAP::Base
   def []=(key, value)
     key = key.to_sym
     instance_variable_set("@#{key}".to_sym, value)
+  end
+
+  def convert_complex(v)
+    case v
+    when Array
+      v.map { |v| convert_complex(v) }
+    when Hash
+      v.transform_values { |v| convert_complex(v) }
+    when DAP::Base, DAP::Enum
+      v.to_wire
+    else
+      v
+    end
   end
 end

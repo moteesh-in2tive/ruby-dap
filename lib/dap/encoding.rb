@@ -42,7 +42,7 @@ module DAP::Encoding
     headers = {}
 
     body = JSON.dump(message.to_wire)
-    headers[CONTENT_LENGTH_HEADER] = body.size
+    headers[CONTENT_LENGTH_HEADER] = body.bytesize
 
     headers.map { |name, value| "#{name}: #{value}\r\n" }.join + "\r\n" + body
   end

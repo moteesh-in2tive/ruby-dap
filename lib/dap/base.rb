@@ -187,6 +187,8 @@ class DAP::Base
       v.transform_values { |v| convert_complex(v) }
     when DAP::Base, DAP::Enum
       v.to_wire
+    when String
+      v.encode('UTF-8', invalid: :replace, undef: :replace, replace: '?')
     else
       v
     end
